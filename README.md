@@ -1,0 +1,1 @@
+# k-quality-gate-action
