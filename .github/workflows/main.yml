@@ -1,0 +1,15 @@
+on: [push]
+
+jobs:
+  quality_gate:
+    runs-on: ubuntu-latest
+    name: Quality gate
+    steps:
+      # To use this repository's private action,
+      # you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Quality gate
+        uses: ./ # Uses an action in the root directory
+        with:
+          repository: kubeopsskills-enterprise/man-net48

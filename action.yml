@@ -1,0 +1,26 @@
+
+name: 'Qualtity Gate'
+description: 'Check CodeQL and Dependabot Issues'
+inputs:
+  repository:
+    description: 'Repository name'
+    required: false
+  ref:
+    description: 'Branch or Tag'
+    required: false
+    default: 'develop'
+  severity:
+    description: 'Minimum failed severity threshold'
+    required: false
+    default: 'high'
+  allow-not-found:
+    description: 'Allow repository with no code scanning results'
+    required: false
+    default: 'true'
+  fail-action: 
+    description: 'Action will be failed when any security alerts detected'
+    required: false
+    default: 'true'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
