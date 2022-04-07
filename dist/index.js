@@ -59281,22 +59281,25 @@ async function run() {
         state: "open",
       }
     );
+
+    console.log("=== STEP 1 ====");
     console.log(codeScanData);
-    // if (
-    //   codeScanData.message === "no analysis found" &&
-    //   allowNotFound !== "true"
-    // ) {
-    //   core.setFailed(`No code scanning results!`);
-    // }
-    // const filteredCodeScanResults = codeScanData.filter((item) => {
-    //   let severity = item.rule.security_severity_level || item.rule.severity;
-    //   return toSeverityLevel(severity) >= toSeverityLevel(severityThreshold);
-    // });
-    // if (filteredCodeScanResults.length > 0) {
-    //   alerts.push(
-    //     `Found ${filteredCodeScanResults.length} code scan issues with ${severityThreshold} severity and above`
-    //   );
-    // }
+
+    if (
+      codeScanData.message === "no analysis found" &&
+      allowNotFound !== "true"
+    ) {
+      core.setFailed(`No code scanning results!`);
+    }
+    const filteredCodeScanResults = codeScanData.filter((item) => {
+      let severity = item.rule.security_severity_level || item.rule.severity;
+      return toSeverityLevel(severity) >= toSeverityLevel(severityThreshold);
+    });
+    if (filteredCodeScanResults.length > 0) {
+      alerts.push(
+        `Found ${filteredCodeScanResults.length} code scan issues with ${severityThreshold} severity and above`
+      );
+    }
 
     // const { data: dependabotData } = await octokit.request("POST /graphql", {
     //   query: `query ($org: String!, $repository: String!) {
@@ -59347,17 +59350,17 @@ async function run() {
     //   alerts.push(`Found ${secretScanData.length} secret scanning alerts`);
     // }
 
-    // if (alerts.length > 0) {
-    //   if (failAction === "true") {
-    //     core.setFailed(alerts.join("\n"));
-    //   } else {
-    //     core.warning(alerts.join("\n"));
-    //   }
-    // } else {
-    //   core.info(
-    //     `No security alerts with ${severityThreshold} severity and above detected`
-    //   );
-    // }
+    if (alerts.length > 0) {
+      if (failAction === "true") {
+        core.setFailed(alerts.join("\n"));
+      } else {
+        core.warning(alerts.join("\n"));
+      }
+    } else {
+      core.info(
+        `No security alerts with ${severityThreshold} severity and above detected`
+      );
+    }
   } catch (error) {
     core.warning("FAIL IN THE TRY AND CATCH")
     core.setFailed(error.message);
