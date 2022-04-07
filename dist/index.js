@@ -59282,9 +59282,6 @@ async function run() {
       }
     );
 
-    console.log("=== STEP 1 ====");
-    console.log(codeScanData);
-
     if (
       codeScanData.message === "no analysis found" &&
       allowNotFound !== "true"
@@ -59339,19 +59336,16 @@ async function run() {
       );
     }
 
-    console.log("=== STEP 2 ====");
-    console.log(dependabotData);
-
-    const { data: secretScanData } = await octokit.request(
-      `GET /repos/${repository}/secret-scanning/alerts{?per_page,state}`,
-      {
-        per_page: 100,
-        state: "open",
-      }
-    );
-    if (secretScanData.length > 0) {
-      alerts.push(`Found ${secretScanData.length} secret scanning alerts`);
-    }
+    // const { data: secretScanData } = await octokit.request(
+    //   `GET /repos/${repository}/secret-scanning/alerts{?per_page,state}`,
+    //   {
+    //     per_page: 100,
+    //     state: "open",
+    //   }
+    // );
+    // if (secretScanData.length > 0) {
+    //   alerts.push(`Found ${secretScanData.length} secret scanning alerts`);
+    // }
 
     if (alerts.length > 0) {
       if (failAction === "true") {
@@ -59365,7 +59359,6 @@ async function run() {
       );
     }
   } catch (error) {
-    core.warning("FAIL IN THE TRY AND CATCH")
     core.setFailed(error.message);
   }
 }
