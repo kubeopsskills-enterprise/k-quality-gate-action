@@ -59301,43 +59301,46 @@ async function run() {
       );
     }
 
-    // const { data: dependabotData } = await octokit.request("POST /graphql", {
-    //   query: `query ($org: String!, $repository: String!) {
-    //     repository(owner: $org, name: $repository) {
-    //       vulnerabilityAlerts(first: 100) {
-    //         nodes {
-    //           createdAt
-    //           state
-    //           securityVulnerability {
-    //             package {
-    //               name
-    //             }
-    //             severity
-    //             advisory {
-    //               description
-    //             }
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }`,
-    //   variables: {
-    //     org: repository.split("/")[0],
-    //     repository: repository.split("/")[1],
-    //   },
-    // });
-    // const filteredDependabotResults =
-    //   dependabotData.data.repository.vulnerabilityAlerts.nodes.filter(
-    //     (item) =>
-    //       item.state === "OPEN" &&
-    //       toSeverityLevel(item.securityVulnerability.severity) >=
-    //         toSeverityLevel(severityThreshold)
-    //   );
-    // if (filteredDependabotResults.length > 0) {
-    //   alerts.push(
-    //     `Found ${filteredDependabotResults.length} dependency vulnerabilities with ${severityThreshold} severity and above`
-    //   );
-    // }
+    const { data: dependabotData } = await octokit.request("POST /graphql", {
+      query: `query ($org: String!, $repository: String!) {
+        repository(owner: $org, name: $repository) {
+          vulnerabilityAlerts(first: 100) {
+            nodes {
+              createdAt
+              state
+              securityVulnerability {
+                package {
+                  name
+                }
+                severity
+                advisory {
+                  description
+                }
+              }
+            }
+          }
+        }
+      }`,
+      variables: {
+        org: repository.split("/")[0],
+        repository: repository.split("/")[1],
+      },
+    });
+    const filteredDependabotResults =
+      dependabotData.data.repository.vulnerabilityAlerts.nodes.filter(
+        (item) =>
+          item.state === "OPEN" &&
+          toSeverityLevel(item.securityVulnerability.severity) >=
+            toSeverityLevel(severityThreshold)
+      );
+    if (filteredDependabotResults.length > 0) {
+      alerts.push(
+        `Found ${filteredDependabotResults.length} dependency vulnerabilities with ${severityThreshold} severity and above`
+      );
+    }
+
+    console.log("=== STEP 2 ====");
+    console.log(dependabotData);
 
     // const { data: secretScanData } = await octokit.request(
     //   `GET /repos/${repository}/secret-scanning/alerts{?per_page,state}`,
