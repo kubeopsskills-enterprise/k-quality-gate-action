@@ -13,3 +13,5 @@ jobs:
         uses: ./ # Uses an action in the root directory
         with:
           repository: kubeopsskills-enterprise/man-net48
+        env:
+          GITHUB_TOKEN: ${{ secrets.ORG_PAT_OWNER }}
